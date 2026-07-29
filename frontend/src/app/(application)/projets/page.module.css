@@ -1,0 +1,203 @@
+.pageStack {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.pageHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.pageHeading h1 {
+  color: var(--color-ink);
+  font-size: clamp(1.9rem, 4vw, 2.65rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.pageHeading p:not(.eyebrow) {
+  margin-top: 10px;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--color-brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.primaryButton {
+  display: inline-flex;
+  min-height: 50px;
+  padding: 12px 22px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ffffff;
+  background: var(--color-ink);
+  border-radius: var(--radius-small);
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background 160ms ease;
+}
+
+.primaryButton:hover {
+  background: var(--color-brand);
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.projectCard {
+  display: flex;
+  min-height: 350px;
+  padding: 30px;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.projectCard:hover {
+  border-color: #c8cdd5;
+  box-shadow: 0 12px 30px rgba(29, 29, 31, 0.06);
+  transform: translateY(-2px);
+}
+
+.projectCard h2 {
+  color: var(--color-ink);
+  font-size: 1.13rem;
+}
+
+.projectCard h2 a:hover {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.projectCard > div:first-child > p {
+  margin-top: 10px;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.progressBlock > div:first-child {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.progressBlock strong {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.progressTrack {
+  height: 7px;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: var(--color-brand);
+  border-radius: inherit;
+}
+
+.progressBlock small {
+  display: block;
+  margin-top: 8px;
+  color: var(--color-muted);
+  font-size: 0.7rem;
+}
+
+.teamBlock > p {
+  margin-bottom: 10px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.people {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.avatar {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--color-ink);
+  background: #e7e9ed;
+  border-radius: 50%;
+  font-size: 0.66rem;
+}
+
+.ownerBadge {
+  display: inline-flex;
+  min-height: 28px;
+  padding: 4px 14px;
+  align-items: center;
+  color: var(--color-brand);
+  background: var(--color-brand-soft);
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1040px) {
+  .projectGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .pageHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pageHeading .primaryButton {
+    width: 100%;
+  }
+
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .projectCard {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 520px) {
+  .pageStack {
+    gap: 22px;
+  }
+
+  .projectCard {
+    padding: 22px 20px;
+  }
+}
