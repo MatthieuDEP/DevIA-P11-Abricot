@@ -82,6 +82,41 @@
   box-shadow: 0 0 0 3px rgba(217, 87, 0, 0.16);
 }
 
+.field input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.field small {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.field .fieldError {
+  color: #b42318;
+}
+
+.formError,
+.formNotice {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-small);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.formError {
+  color: #8f1d16;
+  background: var(--color-danger-soft);
+  border: 1px solid #ffc5c5;
+}
+
+.formNotice {
+  color: #695000;
+  background: var(--color-warning-soft);
+  border: 1px solid #f4d99c;
+}
+
 .submitButton {
   min-height: 52px;
   margin-top: 6px;
@@ -96,6 +131,11 @@
 
 .submitButton:hover {
   background: var(--color-brand);
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .secondaryLink {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AuthShell from "@/components/auth/AuthShell";
 import styles from "@/components/auth/AuthShell.module.css";
 
@@ -16,15 +17,14 @@ export default function ForgotPasswordPage() {
     >
       <h1>Mot de passe oublié</h1>
       <p>Indiquez votre adresse e-mail pour recevoir les instructions de réinitialisation.</p>
-      <form className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="reset-email">Adresse e-mail</label>
-          <input autoComplete="email" id="reset-email" name="email" required type="email" />
-        </div>
-        <button className={styles.submitButton} type="submit">
-          Envoyer les instructions
-        </button>
-      </form>
+      <div className={styles.form}>
+        <p className={styles.formNotice} role="status">
+          La réinitialisation par e-mail n’est pas encore disponible dans l’API.
+        </p>
+        <Link className={styles.submitButton} href="/connexion">
+          Revenir à la connexion
+        </Link>
+      </div>
     </AuthShell>
   );
 }

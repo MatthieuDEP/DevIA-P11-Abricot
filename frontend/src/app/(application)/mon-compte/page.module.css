@@ -73,6 +73,27 @@
   box-shadow: 0 0 0 3px rgba(217, 87, 0, 0.12);
 }
 
+.readOnlyField {
+  color: var(--color-muted);
+  background: #f8f8f9 !important;
+  cursor: default;
+}
+
+.profileActions {
+  display: flex;
+  margin-top: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.profileActions > p {
+  max-width: 620px;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
 .primaryButton {
   display: inline-flex;
   width: fit-content;
@@ -101,6 +122,15 @@
   }
 
   .primaryButton {
+    width: 100%;
+  }
+
+  .profileActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .profileActions form {
     width: 100%;
   }
 }

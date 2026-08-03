@@ -1,12 +1,21 @@
-import Link from "next/link";
 import AuthShell from "@/components/auth/AuthShell";
-import styles from "@/components/auth/AuthShell.module.css";
+import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata = {
   title: "Connexion",
 };
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }) {
+  const params = await searchParams;
+  const redirectTo =
+    typeof params?.redirect === "string" ? params.redirect : "";
+  const notice =
+    params?.reason === "session-expired"
+      ? "Votre session a expiré. Connectez-vous à nouveau."
+      : params?.reason === "logged-out"
+        ? "Vous êtes maintenant déconnecté."
+        : "";
+
   return (
     <AuthShell
       footerLinkHref="/inscription"
@@ -16,29 +25,7 @@ export default function LoginPage() {
       imageAlt="Bureau créatif avec clavier, carnet et fournitures"
     >
       <h1>Connexion</h1>
-      <form className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="login-email">Adresse e-mail</label>
-          <input autoComplete="email" id="login-email" name="email" required type="email" />
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="login-password">Mot de passe</label>
-          <input
-            autoComplete="current-password"
-            id="login-password"
-            minLength={8}
-            name="password"
-            required
-            type="password"
-          />
-        </div>
-        <button className={styles.submitButton} type="submit">
-          Se connecter
-        </button>
-        <Link className={styles.secondaryLink} href="/mot-de-passe-oublie">
-          Mot de passe oublié ?
-        </Link>
-      </form>
+      <LoginForm notice={notice} redirectTo={redirectTo} />
     </AuthShell>
   );
 }

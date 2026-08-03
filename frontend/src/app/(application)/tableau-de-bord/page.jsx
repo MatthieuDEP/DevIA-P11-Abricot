@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireUser } from "@/lib/auth";
 import styles from "./page.module.css";
 
 const tasks = [
@@ -38,14 +39,17 @@ export const metadata = {
   title: "Tableau de bord",
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await requireUser();
+  const displayName = user.name || user.email;
+
   return (
     <div className={styles.pageStack}>
       <section className={styles.pageHeading}>
         <div>
           <p className={styles.eyebrow}>Votre espace de travail</p>
           <h1>Tableau de bord</h1>
-          <p>Bonjour Alice Dupont, voici un aperçu de vos projets et tâches.</p>
+          <p>Bonjour {displayName}, voici un aperçu de vos projets et tâches.</p>
         </div>
         <Link className={styles.primaryButton} href="/projets">
           <span aria-hidden="true">＋</span> Créer un projet

@@ -1,3 +1,12 @@
-export default function AuthLayout({ children }) {
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
+
+export default async function AuthLayout({ children }) {
+  const user = await getCurrentUser();
+
+  if (user) {
+    redirect("/tableau-de-bord");
+  }
+
   return <main>{children}</main>;
 }

@@ -1,11 +1,14 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { requireUser } from "@/lib/auth";
 import styles from "./layout.module.css";
 
-export default function ApplicationLayout({ children }) {
+export default async function ApplicationLayout({ children }) {
+  const user = await requireUser();
+
   return (
     <div className={styles.appShell}>
-      <Header />
+      <Header user={user} />
       <main className={styles.main}>{children}</main>
       <Footer />
     </div>
