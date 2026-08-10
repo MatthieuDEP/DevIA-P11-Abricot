@@ -109,12 +109,23 @@ export const canCreateTasks = async (
 };
 
 /**
- * Vérifie si un utilisateur peut modifier/supprimer des tâches dans un projet
+ * Vérifie si un utilisateur peut modifier des tâches dans un projet
  * @param userId - ID de l'utilisateur
  * @param projectId - ID du projet
  * @returns true si l'utilisateur peut modifier des tâches, false sinon
  */
 export const canModifyTasks = async (
+  userId: string,
+  projectId: string
+): Promise<boolean> => {
+  return await isProjectAdmin(userId, projectId);
+};
+
+/**
+ * Vérifie si un utilisateur peut supprimer une tâche.
+ * Les administrateurs et les contributeurs disposent de ce droit.
+ */
+export const canDeleteTasks = async (
   userId: string,
   projectId: string
 ): Promise<boolean> => {
@@ -144,7 +155,7 @@ export const canDeleteProject = async (
   userId: string,
   projectId: string
 ): Promise<boolean> => {
-  return await isProjectOwner(userId, projectId);
+  return await isProjectAdmin(userId, projectId);
 };
 
 /**

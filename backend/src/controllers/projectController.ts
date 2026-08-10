@@ -295,6 +295,11 @@ export const getProjects = async (
             tasks: true,
           },
         },
+        tasks: {
+          select: {
+            status: true,
+          },
+        },
       },
       orderBy: {
         updatedAt: "desc",
@@ -305,9 +310,23 @@ export const getProjects = async (
     const projectsWithRoles = await Promise.all(
       projects.map(async (project) => {
         const role = await getUserProjectRole(authReq.user!.id, project.id);
+        const completedTasks = project.tasks.filter(
+          (task) => task.status === "DONE"
+        ).length;
+        const totalTasks = project._count.tasks;
+        const { tasks, ...projectWithoutTasks } = project;
+
         return {
-          ...project,
+          ...projectWithoutTasks,
           userRole: role,
+          taskStats: {
+            total: totalTasks,
+            completed: completedTasks,
+            progress:
+              totalTasks === 0
+                ? 0
+                : Math.round((completedTasks / totalTasks) * 100),
+          },
         };
       })
     );

@@ -49,7 +49,7 @@ router.put("/:id", authenticateToken, updateProject);
 /**
  * @route   DELETE /projects/:id
  * @desc    Supprimer un projet
- * @access  Private (nécessite un token JWT valide et être propriétaire)
+ * @access  Private (nécessite un token JWT valide et les droits d'admin)
  * @header  Authorization: Bearer <token>
  */
 router.delete("/:id", authenticateToken, deleteProject);

@@ -9,6 +9,7 @@ import {
   hasProjectAccess,
   canCreateTasks,
   canModifyTasks,
+  canDeleteTasks,
 } from "../utils/permissions";
 import {
   sendSuccess,
@@ -22,6 +23,27 @@ import {
   getTaskAssignments,
 } from "../utils/taskAssignments";
 import { getTaskComments } from "../utils/taskComments";
+
+const priorityRank: Record<string, number> = {
+  URGENT: 0,
+  HIGH: 1,
+  MEDIUM: 2,
+  LOW: 3,
+};
+
+const sortTasksByPriority = <
+  T extends { priority: string; dueDate: Date | null }
+>(tasks: T[]): T[] =>
+  tasks.sort((first, second) => {
+    const priorityDifference =
+      (priorityRank[first.priority] ?? 4) -
+      (priorityRank[second.priority] ?? 4);
+
+    if (priorityDifference !== 0) return priorityDifference;
+    if (!first.dueDate) return 1;
+    if (!second.dueDate) return -1;
+    return first.dueDate.getTime() - second.dueDate.getTime();
+  });
 
 /**
  * Créer une nouvelle tâche
@@ -41,6 +63,7 @@ export const createTask = async (
     const {
       title,
       description,
+      status,
       priority,
       dueDate,
       assigneeIds,
@@ -56,6 +79,7 @@ export const createTask = async (
     const validationErrors = validateCreateTaskData({
       title,
       description,
+      status,
       priority,
       dueDate,
       assigneeIds,
@@ -119,6 +143,7 @@ export const createTask = async (
     const taskData = {
       title: title.trim(),
       description: description?.trim() || null,
+      status: status || "TODO",
       priority: priority || "MEDIUM",
       dueDate: dueDate ? new Date(dueDate) : null,
       projectId,
@@ -268,7 +293,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
           },
         },
       },
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      orderBy: { createdAt: "desc" },
     });
 
     // Ajouter les assignations et commentaires pour chaque tâche
@@ -285,7 +310,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
     );
 
     sendSuccess(res, "Tâches récupérées avec succès", {
-      tasks: tasksWithAssignments,
+      tasks: sortTasksByPriority(tasksWithAssignments),
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des tâches:", error);
@@ -541,9 +566,9 @@ export const deleteTask = async (
       return;
     }
 
-    // Vérifier les permissions pour modifier des tâches
-    const canModify = await canModifyTasks(authReq.user.id, projectId);
-    if (!canModify) {
+    // Vérifier les permissions pour supprimer des tâches
+    const canDelete = await canDeleteTasks(authReq.user.id, projectId);
+    if (!canDelete) {
       sendError(
         res,
         "Vous n'avez pas les permissions pour supprimer des tâches dans ce projet",

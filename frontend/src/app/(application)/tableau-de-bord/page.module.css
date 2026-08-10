@@ -1,54 +1,48 @@
 .pageStack {
   display: flex;
+  padding-top: 24px;
   flex-direction: column;
-  gap: 30px;
 }
 
 .pageHeading {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 32px;
 }
 
 .pageHeading h1 {
   color: var(--color-ink);
-  font-size: clamp(1.9rem, 4vw, 2.65rem);
-  font-weight: 650;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
-.pageHeading p:not(.eyebrow) {
-  margin-top: 10px;
-  color: var(--color-muted);
-  font-size: 1.05rem;
-  line-height: 1.55;
-}
-
-.eyebrow {
-  margin-bottom: 10px;
-  color: var(--color-brand);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.pageHeading p {
+  margin-top: 14px;
+  color: var(--color-ink);
+  font-size: 1.1rem;
+  line-height: 1.4;
 }
 
 .primaryButton,
 .secondaryButton {
   display: inline-flex;
   min-height: 50px;
-  padding: 12px 22px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   color: #ffffff;
   background: var(--color-ink);
-  border-radius: var(--radius-small);
-  font-weight: 600;
+  border-radius: 9px;
+  font-weight: 500;
   line-height: 1.2;
   transition: background 160ms ease;
+}
+
+.primaryButton {
+  min-width: 181px;
+  padding: 12px 22px;
 }
 
 .primaryButton:hover,
@@ -59,17 +53,21 @@
 .viewSwitch {
   display: flex;
   width: fit-content;
+  margin-top: 58px;
   gap: 8px;
 }
 
 .viewSwitch button {
-  min-height: 44px;
-  padding: 10px 18px;
+  display: inline-flex;
+  min-height: 45px;
+  padding: 10px 17px;
+  align-items: center;
+  gap: 9px;
   color: var(--color-brand);
   background: #ffffff;
-  border-radius: var(--radius-small);
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 550;
+  font-weight: 500;
 }
 
 .viewSwitch button:hover,
@@ -78,15 +76,16 @@
 }
 
 .panel {
-  padding: clamp(24px, 4vw, 48px);
+  margin-top: 30px;
+  padding: 40px 58px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-medium);
+  border-radius: 11px;
 }
 
 .panelHeader {
   display: flex;
-  margin-bottom: 34px;
+  margin-bottom: 42px;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
@@ -95,24 +94,26 @@
 .panelHeader h2 {
   color: var(--color-ink);
   font-size: 1.2rem;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .panelHeader p {
-  margin-top: 6px;
+  margin-top: 7px;
   color: var(--color-muted);
+  font-size: 1rem;
 }
 
 .searchField {
   display: flex;
-  width: min(100%, 340px);
-  min-height: 52px;
-  padding: 0 16px;
+  width: min(100%, 357px);
+  min-height: 63px;
+  padding: 0 20px 0 31px;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  color: var(--color-muted);
   background: #ffffff;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
+  border-radius: 7px;
 }
 
 .searchField:focus-within {
@@ -122,71 +123,64 @@
 
 .searchField input {
   min-width: 0;
-  height: 50px;
+  height: 61px;
   flex: 1;
   background: transparent;
   border: 0;
   outline: 0;
 }
 
-.searchField span:last-child {
-  color: var(--color-muted);
-  font-size: 1.35rem;
-}
-
 .taskList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .taskCard {
   display: grid;
-  padding: 26px 32px;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+  min-height: 162px;
+  padding: 24px 39px;
+  grid-template-columns: minmax(0, 1fr) 121px;
+  align-items: stretch;
   gap: 28px;
   background: #ffffff;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-medium);
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-}
-
-.taskCard:hover {
-  border-color: #c8cdd5;
-  box-shadow: 0 12px 30px rgba(29, 29, 31, 0.06);
-  transform: translateY(-2px);
+  border-radius: 9px;
 }
 
 .taskContent {
   min-width: 0;
 }
 
-.taskTitleRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.taskTitleRow h3 {
+.taskContent h3,
+.kanbanTitle h4 {
   color: var(--color-ink);
   font-size: 1.05rem;
-  font-weight: 650;
+  font-weight: 600;
 }
 
-.taskContent > p {
+.taskContent > p,
+.kanbanCard > p {
   margin-top: 8px;
   color: var(--color-muted);
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.taskSide {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .status {
   display: inline-flex;
-  min-height: 26px;
-  padding: 4px 14px;
+  min-height: 25px;
+  padding: 4px 16px;
   align-items: center;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   white-space: nowrap;
 }
 
@@ -205,18 +199,26 @@
   background: var(--color-success-soft);
 }
 
+.cancelled {
+  color: var(--color-muted);
+  background: #eceef1;
+}
+
 .taskMeta {
   display: flex;
-  margin-top: 24px;
+  margin-top: 29px;
   flex-wrap: wrap;
   gap: 10px 20px;
   color: var(--color-muted);
-  font-size: 0.83rem;
+  font-size: 0.78rem;
   list-style: none;
 }
 
-.taskMeta li + li {
+.taskMeta li {
+  display: inline-flex;
   position: relative;
+  align-items: center;
+  gap: 7px;
 }
 
 .taskMeta li + li::before {
@@ -224,12 +226,114 @@
   left: -11px;
   width: 1px;
   height: 14px;
-  background: var(--color-border);
+  background: var(--color-muted);
   content: "";
 }
 
 .secondaryButton {
-  min-width: 112px;
+  width: 121px;
+  padding: 12px 20px;
+}
+
+.emptyState {
+  padding: 54px 20px;
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.emptyState h3 {
+  color: var(--color-ink);
+}
+
+.emptyState p {
+  margin-top: 8px;
+  color: var(--color-muted);
+}
+
+.kanban {
+  display: grid;
+  width: calc(100% + 62px);
+  margin-top: 50px;
+  margin-left: -31px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 22px;
+}
+
+.kanbanColumn {
+  min-height: 1338px;
+  padding: 38px 24px 24px;
+  background: #ffffff;
+  border: 1px solid #ffd8cb;
+  border-radius: 10px;
+}
+
+.kanbanHeading {
+  display: flex;
+  padding-inline: 0;
+  align-items: center;
+  gap: 13px;
+}
+
+.kanbanHeading h2 {
+  color: var(--color-ink);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.kanbanHeading > span {
+  display: inline-grid;
+  min-width: 41px;
+  min-height: 26px;
+  padding-inline: 10px;
+  place-items: center;
+  color: var(--color-muted);
+  background: #e4e6ea;
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.kanbanCards {
+  display: flex;
+  margin-top: 40px;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kanbanCard {
+  display: flex;
+  min-height: 230px;
+  padding: 28px 38px 24px;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+}
+
+.kanbanTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kanbanCard .taskMeta {
+  margin-top: 30px;
+  flex-wrap: nowrap;
+  gap: 10px 18px;
+  white-space: nowrap;
+}
+
+.kanbanCard .secondaryButton {
+  margin-top: 31px;
+}
+
+.columnEmpty {
+  padding: 36px 8px;
+  color: var(--color-muted);
+  text-align: center;
+  font-size: 0.82rem;
 }
 
 .visuallyHidden {
@@ -243,7 +347,23 @@
   border: 0;
 }
 
+@media (max-width: 1100px) {
+  .kanban {
+    width: 100%;
+    margin-left: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .kanbanColumn {
+    min-height: auto;
+  }
+}
+
 @media (max-width: 720px) {
+  .pageStack {
+    padding-top: 0;
+  }
+
   .pageHeading,
   .panelHeader {
     align-items: flex-start;
@@ -251,33 +371,56 @@
   }
 
   .pageHeading .primaryButton,
-  .searchField,
-  .secondaryButton {
+  .searchField {
     width: 100%;
+  }
+
+  .viewSwitch {
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .viewSwitch button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .panel {
+    padding: 28px 24px;
   }
 
   .taskCard {
     grid-template-columns: 1fr;
   }
+
+  .taskSide {
+    align-items: center;
+    flex-direction: row;
+  }
 }
 
 @media (max-width: 520px) {
-  .pageStack {
-    gap: 22px;
+  .pageHeading p {
+    font-size: 1rem;
   }
 
   .panel {
-    padding: 20px;
+    padding: 22px 18px;
   }
 
-  .taskCard {
+  .taskCard,
+  .kanbanCard {
     padding: 22px 20px;
   }
 
-  .taskTitleRow,
   .taskMeta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .kanbanCard .taskMeta {
+    flex-wrap: wrap;
+    white-space: normal;
   }
 
   .taskMeta li + li::before {

@@ -3,6 +3,27 @@ import prisma from "../lib/prisma";
 import { AuthRequest } from "../types";
 import { sendSuccess, sendError, sendServerError } from "../utils/response";
 
+const priorityRank: Record<string, number> = {
+  URGENT: 0,
+  HIGH: 1,
+  MEDIUM: 2,
+  LOW: 3,
+};
+
+const sortTasksByPriority = <
+  T extends { priority: string; dueDate: Date | null }
+>(tasks: T[]): T[] =>
+  tasks.sort((first, second) => {
+    const priorityDifference =
+      (priorityRank[first.priority] ?? 4) -
+      (priorityRank[second.priority] ?? 4);
+
+    if (priorityDifference !== 0) return priorityDifference;
+    if (!first.dueDate) return 1;
+    if (!second.dueDate) return -1;
+    return first.dueDate.getTime() - second.dueDate.getTime();
+  });
+
 /**
  * @swagger
  * /dashboard/assigned-tasks:
@@ -99,7 +120,9 @@ export const getAssignedTasks = async (
       ],
     });
 
-    sendSuccess(res, "Tâches assignées récupérées", { tasks });
+    sendSuccess(res, "Tâches assignées récupérées", {
+      tasks: sortTasksByPriority(tasks),
+    });
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des tâches assignées:",
@@ -231,7 +254,24 @@ export const getProjectsWithTasks = async (
       },
     });
 
-    sendSuccess(res, "Projets avec tâches récupérés", { projects });
+    const sortedProjects = projects
+      .map((project) => ({
+        ...project,
+        tasks: sortTasksByPriority(project.tasks),
+      }))
+      .sort((first, second) => {
+        const firstPriority = first.tasks[0]?.priority;
+        const secondPriority = second.tasks[0]?.priority;
+
+        return (
+          (priorityRank[firstPriority] ?? 4) -
+          (priorityRank[secondPriority] ?? 4)
+        );
+      });
+
+    sendSuccess(res, "Projets avec tâches récupérés", {
+      projects: sortedProjects,
+    });
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des projets avec tâches:",

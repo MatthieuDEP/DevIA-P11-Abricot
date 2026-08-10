@@ -1,42 +1,36 @@
 .pageStack {
   display: flex;
+  width: calc(100% - 72px);
+  margin: 0 auto;
   flex-direction: column;
-  gap: 30px;
+  gap: 62px;
 }
 
 .pageHeading {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 32px;
 }
 
 .pageHeading h1 {
   color: var(--color-ink);
-  font-size: clamp(1.9rem, 4vw, 2.65rem);
-  font-weight: 650;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
-.pageHeading p:not(.eyebrow) {
-  margin-top: 10px;
-  color: var(--color-muted);
-  font-size: 1.05rem;
-  line-height: 1.55;
-}
-
-.eyebrow {
-  margin-bottom: 10px;
-  color: var(--color-brand);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.pageHeading p {
+  margin-top: 14px;
+  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .primaryButton {
   display: inline-flex;
+  min-width: 181px;
   min-height: 50px;
   padding: 12px 22px;
   align-items: center;
@@ -44,7 +38,7 @@
   gap: 8px;
   color: #ffffff;
   background: var(--color-ink);
-  border-radius: var(--radius-small);
+  border-radius: 9px;
   cursor: pointer;
   font-weight: 600;
   line-height: 1.2;
@@ -58,13 +52,13 @@
 .projectGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 18px 14px;
 }
 
 .projectCard {
   display: flex;
   min-height: 350px;
-  padding: 30px;
+  padding: 32px 33px 30px;
   flex-direction: column;
   justify-content: space-between;
   background: #ffffff;
@@ -133,7 +127,10 @@
 }
 
 .teamBlock > p {
+  display: flex;
   margin-bottom: 10px;
+  align-items: center;
+  gap: 6px;
   color: var(--color-muted);
   font-size: 0.75rem;
 }
@@ -143,6 +140,284 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.successBanner,
+.errorBanner {
+  padding: 13px 16px;
+  border-radius: var(--radius-small);
+  line-height: 1.45;
+}
+
+.successBanner {
+  color: var(--color-success);
+  background: var(--color-success-soft);
+}
+
+.errorBanner {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.morePeople {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--color-muted);
+  background: #e7e9ed;
+  border-radius: 50%;
+  font-size: 0.66rem;
+}
+
+.emptyState {
+  padding: 64px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+.emptyState h2 {
+  color: var(--color-ink);
+  font-size: 1.25rem;
+}
+
+.emptyState p {
+  margin-top: 8px;
+  color: var(--color-muted);
+}
+
+.dialog {
+  position: relative;
+  width: min(94vw, 598px);
+  min-height: min(616px, 92vh);
+  max-height: 92vh;
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  background: #ffffff;
+  border: 0;
+  border-radius: 11px;
+  box-shadow: 0 24px 80px rgba(29, 29, 31, 0.22);
+}
+
+.dialog::backdrop {
+  background: rgba(29, 29, 31, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.dialogHeader {
+  display: flex;
+  padding: 80px 72px 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dialogHeader h2 {
+  color: var(--color-ink);
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.iconButton {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--color-muted);
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dialogForm {
+  display: flex;
+  padding: 22px 72px 72px;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formField > span {
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.formField input,
+.formField textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  outline: 0;
+}
+
+.formField textarea {
+  height: 54px;
+  min-height: 54px;
+  resize: none;
+}
+
+.formField input:focus,
+.formField textarea:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(217, 87, 0, 0.12);
+}
+
+.formField small {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.formField .fieldError {
+  color: var(--color-danger);
+}
+
+.contributorDropdown {
+  position: relative;
+}
+
+.contributorDropdown summary {
+  display: flex;
+  min-height: 54px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-muted);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  list-style: none;
+}
+
+.contributorDropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.contributorDropdown summary::after {
+  width: 11px;
+  height: 11px;
+  border-right: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  content: "";
+  transform: rotate(45deg) translateY(-3px);
+  transition: transform 150ms ease;
+}
+
+.contributorDropdown[open] summary::after {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.contributorOptions {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  display: flex;
+  max-height: 180px;
+  padding: 8px;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 3px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 12px 28px rgba(29, 29, 31, 0.12);
+}
+
+.contributorOptions label {
+  display: flex;
+  padding: 9px 10px;
+  align-items: center;
+  gap: 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.contributorOptions label:hover {
+  background: #f5f6f8;
+}
+
+.contributorOptions input {
+  width: auto;
+  min-height: auto;
+}
+
+.contributorOptions p {
+  padding: 9px 10px;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.dialogActions {
+  display: flex;
+  margin-top: 30px;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.addProjectButton {
+  min-height: 51px;
+  padding: 12px 28px;
+  color: #ffffff;
+  background: var(--color-ink);
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.addProjectButton:hover:not(:disabled) {
+  background: var(--color-brand);
+}
+
+.addProjectButton:disabled {
+  color: #9aa1ae;
+  background: #e4e6ea;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  min-height: 50px;
+  padding: 12px 22px;
+  background: #f1f2f4;
+  border-radius: var(--radius-small);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .avatar {
@@ -167,6 +442,16 @@
   font-size: 0.78rem;
 }
 
+.memberAvatars {
+  display: inline-flex;
+  margin-left: 1px;
+  align-items: center;
+}
+
+.memberAvatars > span + span {
+  margin-left: -5px;
+}
+
 @media (max-width: 1040px) {
   .projectGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -174,6 +459,11 @@
 }
 
 @media (max-width: 720px) {
+  .pageStack {
+    width: 100%;
+    gap: 38px;
+  }
+
   .pageHeading {
     align-items: flex-start;
     flex-direction: column;
@@ -199,5 +489,28 @@
 
   .projectCard {
     padding: 22px 20px;
+  }
+
+  .dialogHeader,
+  .dialogForm {
+    padding-inline: 20px;
+  }
+
+  .dialogHeader {
+    padding-top: 64px;
+    padding-bottom: 14px;
+  }
+
+  .dialogForm {
+    padding-top: 18px;
+    padding-bottom: 36px;
+  }
+
+  .dialogActions {
+    flex-direction: column;
+  }
+
+  .dialogActions button {
+    width: 100%;
   }
 }

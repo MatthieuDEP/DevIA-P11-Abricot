@@ -11,6 +11,88 @@
   flex: 1;
 }
 
+.statePanel {
+  max-width: 680px;
+  margin: 30px auto;
+  padding: clamp(28px, 5vw, 52px);
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+}
+
+.stateEyebrow {
+  margin-bottom: 10px;
+  color: var(--color-brand);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.statePanel h1 {
+  color: var(--color-ink);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.statePanel > p:last-of-type {
+  margin-top: 12px;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.stateActions {
+  display: flex;
+  margin-top: 26px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.stateActions button,
+.stateActions a {
+  min-height: 46px;
+  padding: 11px 18px;
+  background: #eef0f3;
+  border-radius: var(--radius-small);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.stateActions button {
+  color: #ffffff;
+  background: var(--color-ink);
+}
+
+.loadingStack {
+  display: flex;
+  padding: 24px 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loadingStack span {
+  display: block;
+  height: 82px;
+  background: linear-gradient(90deg, #eceef1 25%, #f7f8fa 50%, #eceef1 75%);
+  background-size: 200% 100%;
+  border-radius: var(--radius-medium);
+  animation: loading 1.3s ease-in-out infinite;
+}
+
+.loadingStack span:first-child {
+  width: 55%;
+  height: 48px;
+}
+
+@keyframes loading {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingStack span { animation: none; }
+}
+
 @media (max-width: 900px) {
   .main {
     width: min(calc(100% - 32px), var(--content-width));
@@ -22,5 +104,9 @@
   .main {
     width: calc(100% - 24px);
     padding-top: 36px;
+  }
+
+  .stateActions {
+    flex-direction: column;
   }
 }
