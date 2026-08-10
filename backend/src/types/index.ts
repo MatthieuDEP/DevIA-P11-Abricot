@@ -72,6 +72,10 @@ export interface CreateTaskRequest {
   assigneeIds?: string[]; // IDs des utilisateurs assignés à la tâche
 }
 
+export interface CreateTasksBulkRequest {
+  tasks: CreateTaskRequest[];
+}
+
 export interface UpdateTaskRequest {
   title?: string;
   description?: string;

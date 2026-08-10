@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { createTaskAction, updateTaskAction } from "../actions";
 import { dateInputValue } from "./project-utils";
-import styles from "./page.module.css";
+import styles from "./TaskDialog.module.css";
 
 const initialState = { status: "idle", message: "", fieldErrors: {} };
 

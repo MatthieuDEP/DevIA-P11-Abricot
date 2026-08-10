@@ -1,8 +1,14 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { CreateTaskRequest, UpdateTaskRequest, AuthRequest } from "../types";
+import {
+  CreateTaskRequest,
+  CreateTasksBulkRequest,
+  UpdateTaskRequest,
+  AuthRequest,
+} from "../types";
 import {
   validateCreateTaskData,
+  validateCreateTasksBulkData,
   validateUpdateTaskData,
 } from "../utils/validation";
 import {
@@ -203,6 +209,128 @@ export const createTask = async (
   } catch (error) {
     console.error("Erreur lors de la création de la tâche:", error);
     sendServerError(res, "Erreur lors de la création de la tâche");
+  }
+};
+
+/**
+ * Créer plusieurs tâches de façon atomique.
+ * POST /projects/:id/tasks/bulk
+ */
+export const createTasksBulk = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const projectId = req.params.id;
+    const authReq = req as AuthRequest;
+    const tasks = Array.isArray(req.body?.tasks)
+      ? req.body.tasks as CreateTasksBulkRequest["tasks"]
+      : undefined;
+
+    if (!projectId || typeof projectId !== "string") {
+      sendError(res, "ID de projet invalide", "INVALID_PROJECT_ID", 400);
+      return;
+    }
+
+    if (!authReq.user) {
+      sendError(res, "Utilisateur non authentifié", "UNAUTHORIZED", 401);
+      return;
+    }
+
+    const validationErrors = validateCreateTasksBulkData({ tasks });
+    if (validationErrors.length > 0 || !tasks) {
+      sendValidationError(
+        res,
+        "Données de création groupée invalides",
+        validationErrors
+      );
+      return;
+    }
+
+    const [project, hasAccess, canCreate] = await Promise.all([
+      prisma.project.findUnique({ where: { id: projectId } }),
+      hasProjectAccess(authReq.user.id, projectId),
+      canCreateTasks(authReq.user.id, projectId),
+    ]);
+
+    if (!project) {
+      sendError(res, "Projet non trouvé", "PROJECT_NOT_FOUND", 404);
+      return;
+    }
+
+    if (!hasAccess || !canCreate) {
+      sendError(
+        res,
+        "Vous n'avez pas les permissions pour créer des tâches dans ce projet",
+        "FORBIDDEN",
+        403
+      );
+      return;
+    }
+
+    const uniqueAssigneeIds = [
+      ...new Set(tasks.flatMap((task) => task.assigneeIds || [])),
+    ];
+    const areValidMembers = await validateProjectMembers(
+      projectId,
+      uniqueAssigneeIds
+    );
+
+    if (!areValidMembers) {
+      sendError(
+        res,
+        "Certains utilisateurs assignés ne sont pas membres du projet",
+        "INVALID_ASSIGNEES",
+        400
+      );
+      return;
+    }
+
+    const createdTasks = await prisma.$transaction(
+      tasks.map((task) => {
+        const assigneeIds = [...new Set(task.assigneeIds || [])];
+
+        return prisma.task.create({
+          data: {
+            title: task.title.trim(),
+            description: task.description?.trim() || null,
+            status: task.status || "TODO",
+            priority: task.priority || "MEDIUM",
+            dueDate: task.dueDate ? new Date(task.dueDate) : null,
+            projectId,
+            creatorId: authReq.user!.id,
+            assignees: assigneeIds.length > 0
+              ? {
+                  create: assigneeIds.map((userId) => ({ userId })),
+                }
+              : undefined,
+          },
+          include: {
+            creator: {
+              select: { id: true, email: true, name: true },
+            },
+            assignees: {
+              include: {
+                user: {
+                  select: { id: true, email: true, name: true },
+                },
+              },
+            },
+            comments: true,
+          },
+        });
+      })
+    );
+
+    sendSuccess(
+      res,
+      `${createdTasks.length} tâche${createdTasks.length > 1 ? "s" : ""} créée${createdTasks.length > 1 ? "s" : ""} avec succès`,
+      { tasks: createdTasks },
+      201
+    );
+  } catch (error) {
+    console.error("Erreur lors de la création groupée des tâches:", error);
+    sendServerError(res, "Erreur lors de la création groupée des tâches");
   }
 };
 

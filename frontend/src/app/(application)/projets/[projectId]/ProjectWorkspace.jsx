@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useMemo, useState, useTransition } from "react";
 import { CalendarDays, ChevronDown, ChevronUp, ListChecks, MoreHorizontal, Pencil, Search, Trash2 } from "lucide-react";
 import { deleteTaskAction } from "../actions";
+import AiTaskDialog from "./AiTaskDialog";
 import ProjectDialog from "./ProjectDialog";
 import TaskComments from "./TaskComments";
 import TaskDialog from "./TaskDialog";
@@ -95,6 +96,7 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState(null);
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [expandedTaskId, setExpandedTaskId] = useState(null);
@@ -146,7 +148,7 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
         </div>
         <div className={styles.projectActions}>
           <button className={styles.primaryButton} onClick={() => setTaskDialogOpen(true)} type="button">Créer une tâche</button>
-          <button aria-disabled="true" className={styles.aiButton} disabled title="La génération automatique sera intégrée ultérieurement" type="button">✦ IA</button>
+          <button className={styles.aiButton} onClick={() => setAiDialogOpen(true)} type="button">✦ IA</button>
         </div>
       </section>
 
@@ -253,6 +255,13 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
         )}
       </section>
 
+      {aiDialogOpen && (
+        <AiTaskDialog
+          onClose={() => setAiDialogOpen(false)}
+          onNotice={handleNotice}
+          project={project}
+        />
+      )}
       {projectDialogOpen && (
         <ProjectDialog key={project.updatedAt} onClose={() => setProjectDialogOpen(false)} onNotice={handleNotice} open project={project} />
       )}

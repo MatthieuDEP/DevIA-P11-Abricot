@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ApiError } from "@/lib/api";
-import { authenticatedApiRequest } from "@/lib/application-api";
+import { authenticatedApiRequest, getProjectWorkspace } from "@/lib/application-api";
+import { generateProjectTasks, TaskGenerationError } from "@/lib/ai/task-generation/pipeline";
+import { generatedTaskListSchema, promptSchema } from "@/lib/ai/task-generation/schema";
 
 function text(formData, field) {
   return String(formData.get(field) || "").trim();
@@ -210,6 +212,80 @@ export async function createTaskAction(projectId, _previousState, formData) {
     return {
       status: "success",
       message: response.message || "Tâche créée.",
+      fieldErrors: {},
+    };
+  } catch (error) {
+    return errorState(error);
+  }
+}
+
+export async function generateTasksAction(projectId, prompt) {
+  const parsedPrompt = promptSchema.safeParse(prompt);
+
+  if (!parsedPrompt.success) {
+    return {
+      status: "error",
+      message: parsedPrompt.error.issues[0]?.message || "Demande invalide.",
+      tasks: [],
+    };
+  }
+
+  try {
+    const workspace = await getProjectWorkspace(projectId);
+
+    if (!workspace.project) {
+      return {
+        status: "error",
+        message: "Projet introuvable.",
+        tasks: [],
+      };
+    }
+
+    const result = await generateProjectTasks({
+      project: workspace.project,
+      tasks: workspace.tasks,
+      prompt: parsedPrompt.data,
+    });
+
+    return {
+      status: "success",
+      message: `${result.tasks.length} proposition${result.tasks.length > 1 ? "s" : ""} générée${result.tasks.length > 1 ? "s" : ""}.`,
+      tasks: result.tasks,
+    };
+  } catch (error) {
+    if (error instanceof TaskGenerationError) {
+      return { status: "error", message: error.message, tasks: [] };
+    }
+
+    const state = errorState(error);
+    return { ...state, tasks: [] };
+  }
+}
+
+export async function createGeneratedTasksAction(projectId, tasks) {
+  const parsedTasks = generatedTaskListSchema.safeParse({ tasks });
+
+  if (!parsedTasks.success) {
+    return {
+      status: "error",
+      message: "Certaines propositions sont invalides. Vérifiez les champs modifiés.",
+      fieldErrors: {},
+    };
+  }
+
+  try {
+    const response = await authenticatedApiRequest(
+      projectPath(projectId, "/tasks/bulk"),
+      {
+        method: "POST",
+        body: JSON.stringify({ tasks: parsedTasks.data.tasks }),
+      }
+    );
+    refreshProject(projectId);
+
+    return {
+      status: "success",
+      message: response.message || "Les tâches ont été ajoutées.",
       fieldErrors: {},
     };
   } catch (error) {

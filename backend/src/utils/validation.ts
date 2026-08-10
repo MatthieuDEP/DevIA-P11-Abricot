@@ -1,4 +1,4 @@
-import { ValidationError } from "../types";
+import { CreateTaskRequest, ValidationError } from "../types";
 
 /**
  * Valide un email
@@ -366,6 +366,38 @@ export const validateCreateTaskData = (data: {
   }
 
   return errors;
+};
+
+/**
+ * Valide une liste de tâches avant leur création transactionnelle.
+ */
+export const validateCreateTasksBulkData = (data: {
+  tasks?: CreateTaskRequest[];
+}): ValidationError[] => {
+  if (!Array.isArray(data.tasks)) {
+    return [{ field: "tasks", message: "Les tâches doivent être un tableau" }];
+  }
+
+  if (data.tasks.length < 1 || data.tasks.length > 10) {
+    return [{
+      field: "tasks",
+      message: "Vous devez fournir entre 1 et 10 tâches",
+    }];
+  }
+
+  return data.tasks.flatMap((task, index) => {
+    if (!task || typeof task !== "object" || Array.isArray(task)) {
+      return [{
+        field: `tasks[${index}]`,
+        message: "La tâche doit être un objet valide",
+      }];
+    }
+
+    return validateCreateTaskData(task).map((error) => ({
+      field: `tasks[${index}].${error.field}`,
+      message: error.message,
+    }));
+  });
 };
 
 /**

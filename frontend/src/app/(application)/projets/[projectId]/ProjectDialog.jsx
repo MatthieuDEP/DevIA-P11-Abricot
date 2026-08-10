@@ -8,7 +8,7 @@ import {
   removeContributorAction,
   updateProjectAction,
 } from "../actions";
-import styles from "./page.module.css";
+import styles from "./ProjectDialog.module.css";
 
 const initialState = { status: "idle", message: "", fieldErrors: {} };
 

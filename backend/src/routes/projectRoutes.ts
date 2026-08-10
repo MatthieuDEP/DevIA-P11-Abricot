@@ -78,6 +78,7 @@ router.delete(
 // Routes pour les tâches
 import {
   createTask,
+  createTasksBulk,
   getTasks,
   getTask,
   updateTask,
@@ -85,6 +86,7 @@ import {
 } from "../controllers/taskController";
 
 router.post("/:id/tasks", authenticateToken, createTask);
+router.post("/:id/tasks/bulk", authenticateToken, createTasksBulk);
 
 /**
  * @route   GET /projects/:id/tasks

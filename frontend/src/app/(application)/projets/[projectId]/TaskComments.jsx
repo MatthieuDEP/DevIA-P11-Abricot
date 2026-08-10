@@ -8,7 +8,7 @@ import {
   updateCommentAction,
 } from "../actions";
 import { formatDate, initials } from "./project-utils";
-import styles from "./page.module.css";
+import styles from "./TaskComments.module.css";
 
 const initialState = { status: "idle", message: "", fieldErrors: {} };
 
