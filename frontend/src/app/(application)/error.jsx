@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import styles from "./layout.module.css";
+import styles from "./error.module.css";
 
 export default function ApplicationError({ reset }) {
   return (

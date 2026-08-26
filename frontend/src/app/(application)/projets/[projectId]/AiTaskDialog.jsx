@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { LoaderCircle, Sparkle, X } from "lucide-react";
 import { FaPen, FaTrash } from "react-icons/fa";
 import {
@@ -43,22 +43,21 @@ export default function AiTaskDialog({ onClose, onNotice, project }) {
   const [error, setError] = useState("");
   const [isGenerating, startGenerating] = useTransition();
   const [isSaving, startSaving] = useTransition();
+  const dialogRef = useRef(null);
   const users = useMemo(() => assignableUsers(project), [project]);
 
   useEffect(() => {
-    function closeOnEscape(event) {
-      if (event.key === "Escape" && !isGenerating && !isSaving) onClose();
-    }
-
-    document.addEventListener("keydown", closeOnEscape);
+    const dialog = dialogRef.current;
     const previousOverflow = document.body.style.overflow;
+
+    if (dialog && !dialog.open) dialog.showModal();
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", closeOnEscape);
+      if (dialog?.open) dialog.close();
       document.body.style.overflow = previousOverflow;
     };
-  }, [isGenerating, isSaving, onClose]);
+  }, []);
 
   function generate(event) {
     event.preventDefault();
@@ -106,6 +105,7 @@ export default function AiTaskDialog({ onClose, onNotice, project }) {
 
         if (result.status === "success") {
           onNotice(result.message, "success");
+          dialogRef.current?.close();
           onClose();
         } else {
           setError(result.message);
@@ -118,24 +118,64 @@ export default function AiTaskDialog({ onClose, onNotice, project }) {
 
   const busy = isGenerating || isSaving;
 
+  function closeDialog() {
+    if (busy) return;
+    dialogRef.current?.close();
+    onClose();
+  }
+
+  function keepFocusInside(event) {
+    if (event.key !== "Tab") return;
+
+    const dialog = dialogRef.current;
+    const focusable = dialog
+      ? [...dialog.querySelectorAll(
+          "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])"
+        )].filter((element) => !element.hidden && element.getClientRects().length > 0)
+      : [];
+
+    if (focusable.length === 0) {
+      event.preventDefault();
+      dialog?.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
-    <div
+    <dialog
+      aria-labelledby="ai-task-dialog-title"
       className={styles.aiDialogOverlay}
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget && !busy) onClose();
+      onCancel={(event) => {
+        event.preventDefault();
+        closeDialog();
       }}
+      onKeyDown={keepFocusInside}
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) closeDialog();
+      }}
+      ref={dialogRef}
+      tabIndex={-1}
     >
       <section
-        aria-labelledby="ai-task-dialog-title"
-        aria-modal="true"
+        aria-busy={busy}
         className={`${styles.aiDialog} ${drafts.length > 0 ? styles.aiDialogResults : styles.aiDialogCreate}`}
-        role="dialog"
       >
         <button
           aria-label="Fermer"
           className={styles.aiDialogClose}
           disabled={busy}
-          onClick={onClose}
+          onClick={closeDialog}
           type="button"
         >
           <X aria-hidden="true" size={18} />
@@ -147,6 +187,14 @@ export default function AiTaskDialog({ onClose, onNotice, project }) {
             {drafts.length > 0 ? "Vos tâches..." : "Créer une tâche"}
           </h2>
         </header>
+
+        <p aria-live="polite" className={styles.visuallyHidden} role="status">
+          {isGenerating
+            ? "Génération des tâches en cours."
+            : drafts.length > 0
+              ? drafts.length + " tâche" + (drafts.length > 1 ? "s générées." : " générée.")
+              : ""}
+        </p>
 
         <div className={styles.aiDialogContent}>
           {drafts.length === 0 ? (
@@ -315,6 +363,6 @@ export default function AiTaskDialog({ onClose, onNotice, project }) {
           </form>
         </div>
       </section>
-    </div>
+    </dialog>
   );
 }

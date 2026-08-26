@@ -1,0 +1,43 @@
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.formError,
+.formNotice {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-small);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.formNotice {
+  color: #695000;
+  background: var(--color-warning-soft);
+  border: 1px solid #f4d99c;
+}
+
+.submitButton {
+  min-height: 52px;
+  margin-top: 6px;
+  padding: 12px 20px;
+  color: #ffffff;
+  background: var(--color-ink);
+  border-radius: var(--radius-small);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.submitButton:hover {
+  background: var(--color-brand);
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

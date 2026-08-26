@@ -1,0 +1,24 @@
+.skipLink {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 12px;
+  padding: 12px 18px;
+  color: #ffffff;
+  background: var(--color-ink);
+  border-radius: var(--radius-small);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(calc(-100% - 24px));
+  transition: transform 140ms ease;
+}
+
+.skipLink:focus-visible {
+  outline-color: var(--color-brand);
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skipLink {
+    transition: none;
+  }
+}

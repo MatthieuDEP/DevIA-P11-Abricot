@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { updatePasswordAction, updateProfileAction } from "./actions";
-import styles from "./page.module.css";
+import styles from "./AccountForms.module.css";
 
 const initialState = { status: "idle", message: "", fieldErrors: {} };
 
@@ -30,18 +30,42 @@ export default function AccountForms({ user, firstName, lastName }) {
         )}
         <label className={styles.formField}>
           <span>Nom</span>
-          <input autoComplete="family-name" defaultValue={lastName} name="lastName" required type="text" />
-          {profileState.fieldErrors?.lastName && <small>{profileState.fieldErrors.lastName}</small>}
+          <input
+            aria-describedby={profileState.fieldErrors?.lastName ? "profile-last-name-error" : undefined}
+            aria-invalid={Boolean(profileState.fieldErrors?.lastName)}
+            autoComplete="family-name"
+            defaultValue={lastName}
+            name="lastName"
+            required
+            type="text"
+          />
+          {profileState.fieldErrors?.lastName && <small id="profile-last-name-error">{profileState.fieldErrors.lastName}</small>}
         </label>
         <label className={styles.formField}>
           <span>Prénom</span>
-          <input autoComplete="given-name" defaultValue={firstName} name="firstName" required type="text" />
-          {profileState.fieldErrors?.firstName && <small>{profileState.fieldErrors.firstName}</small>}
+          <input
+            aria-describedby={profileState.fieldErrors?.firstName ? "profile-first-name-error" : undefined}
+            aria-invalid={Boolean(profileState.fieldErrors?.firstName)}
+            autoComplete="given-name"
+            defaultValue={firstName}
+            name="firstName"
+            required
+            type="text"
+          />
+          {profileState.fieldErrors?.firstName && <small id="profile-first-name-error">{profileState.fieldErrors.firstName}</small>}
         </label>
         <label className={styles.formField}>
           <span>Email</span>
-          <input autoComplete="email" defaultValue={user.email} name="email" required type="email" />
-          {profileState.fieldErrors?.email && <small>{profileState.fieldErrors.email}</small>}
+          <input
+            aria-describedby={profileState.fieldErrors?.email ? "profile-email-error" : undefined}
+            aria-invalid={Boolean(profileState.fieldErrors?.email)}
+            autoComplete="email"
+            defaultValue={user.email}
+            name="email"
+            required
+            type="email"
+          />
+          {profileState.fieldErrors?.email && <small id="profile-email-error">{profileState.fieldErrors.email}</small>}
         </label>
         <div className={styles.formField}>
           <span>Mot de passe</span>
@@ -91,20 +115,41 @@ export default function AccountForms({ user, firstName, lastName }) {
           )}
           <label className={styles.formField}>
             <span>Mot de passe actuel</span>
-            <input autoComplete="current-password" name="currentPassword" required type="password" />
-            {passwordState.fieldErrors?.currentPassword && <small>{passwordState.fieldErrors.currentPassword}</small>}
+            <input
+              aria-describedby={passwordState.fieldErrors?.currentPassword ? "current-password-error" : undefined}
+              aria-invalid={Boolean(passwordState.fieldErrors?.currentPassword)}
+              autoComplete="current-password"
+              name="currentPassword"
+              required
+              type="password"
+            />
+            {passwordState.fieldErrors?.currentPassword && <small id="current-password-error">{passwordState.fieldErrors.currentPassword}</small>}
           </label>
           <label className={styles.formField}>
             <span>Nouveau mot de passe</span>
-            <input autoComplete="new-password" name="newPassword" required type="password" />
-            {passwordState.fieldErrors?.newPassword && <small>{passwordState.fieldErrors.newPassword}</small>}
+            <input
+              aria-describedby={passwordState.fieldErrors?.newPassword ? "password-help new-password-error" : "password-help"}
+              aria-invalid={Boolean(passwordState.fieldErrors?.newPassword)}
+              autoComplete="new-password"
+              name="newPassword"
+              required
+              type="password"
+            />
+            {passwordState.fieldErrors?.newPassword && <small id="new-password-error">{passwordState.fieldErrors.newPassword}</small>}
           </label>
           <label className={styles.formField}>
             <span>Confirmer le mot de passe</span>
-            <input autoComplete="new-password" name="confirmation" required type="password" />
-            {passwordState.fieldErrors?.confirmation && <small>{passwordState.fieldErrors.confirmation}</small>}
+            <input
+              aria-describedby={passwordState.fieldErrors?.confirmation ? "confirmation-error" : undefined}
+              aria-invalid={Boolean(passwordState.fieldErrors?.confirmation)}
+              autoComplete="new-password"
+              name="confirmation"
+              required
+              type="password"
+            />
+            {passwordState.fieldErrors?.confirmation && <small id="confirmation-error">{passwordState.fieldErrors.confirmation}</small>}
           </label>
-          <p className={styles.passwordHelp}>8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.</p>
+          <p className={styles.passwordHelp} id="password-help">8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.</p>
           <div className={styles.dialogActions}>
             <button
               className={styles.secondaryButton}

@@ -65,13 +65,22 @@ export default function TaskDialog({ mode, project, task, open, onClose, onNotic
 
         <label className={styles.formField}>
           <span>Titre{mode === "create" ? "*" : ""}</span>
-          <input defaultValue={task?.title || ""} maxLength="200" name="title" required />
-          {state.fieldErrors?.title && <small className={styles.fieldError}>{state.fieldErrors.title}</small>}
+          <input
+            aria-describedby={state.fieldErrors?.title ? "task-title-error" : undefined}
+            aria-invalid={Boolean(state.fieldErrors?.title)}
+            defaultValue={task?.title || ""}
+            maxLength="200"
+            name="title"
+            required
+          />
+          {state.fieldErrors?.title && <small className={styles.fieldError} id="task-title-error">{state.fieldErrors.title}</small>}
         </label>
 
         <label className={styles.formField}>
           <span>Description{mode === "create" ? "*" : ""}</span>
           <textarea
+            aria-describedby={state.fieldErrors?.description ? "task-description-error" : undefined}
+            aria-invalid={Boolean(state.fieldErrors?.description)}
             defaultValue={task?.description || ""}
             maxLength="1000"
             name="description"
@@ -79,7 +88,7 @@ export default function TaskDialog({ mode, project, task, open, onClose, onNotic
             rows={2}
           />
           {state.fieldErrors?.description && (
-            <small className={styles.fieldError}>{state.fieldErrors.description}</small>
+            <small className={styles.fieldError} id="task-description-error">{state.fieldErrors.description}</small>
           )}
         </label>
 

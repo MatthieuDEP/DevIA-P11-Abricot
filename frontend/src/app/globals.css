@@ -1,18 +1,20 @@
 :root {
-  --color-brand: #d95700;
-  --color-brand-dark: #b94800;
+  --color-brand: #b54700;
+  --color-brand-dark: #933900;
   --color-brand-soft: #ffe7d6;
   --color-ink: #1d1d1f;
   --color-text: #252528;
-  --color-muted: #707789;
+  --color-muted: #606879;
   --color-border: #dfe2e7;
+  --color-control-border: #8790a0;
+  --color-focus: #b94800;
   --color-surface: #ffffff;
   --color-background: #f7f8fa;
-  --color-success: #159957;
+  --color-success: #087a44;
   --color-success-soft: #e7f8ef;
-  --color-warning: #e58a00;
+  --color-warning: #765000;
   --color-warning-soft: #fff1d6;
-  --color-danger: #ed4b4b;
+  --color-danger: #a92a2a;
   --color-danger-soft: #ffe0e0;
   --shadow-header: 0 8px 24px rgba(23, 23, 23, 0.05);
   --radius-small: 8px;
@@ -70,8 +72,13 @@ svg {
 }
 
 :focus-visible {
-  outline: 3px solid rgba(217, 87, 0, 0.42);
+  outline: 3px solid var(--color-focus);
   outline-offset: 3px;
+}
+
+::placeholder {
+  color: var(--color-muted);
+  opacity: 1;
 }
 
 ::selection {

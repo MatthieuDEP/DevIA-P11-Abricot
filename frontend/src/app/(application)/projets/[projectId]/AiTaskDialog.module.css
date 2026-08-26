@@ -14,11 +14,25 @@
   position: fixed;
   z-index: 100;
   inset: 0;
-  display: grid;
+  display: none;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
   padding: 16px;
   place-items: center;
   background: rgba(20, 22, 27, 0.42);
+  border: 0;
   backdrop-filter: blur(2px);
+}
+
+.aiDialogOverlay[open] {
+  display: grid;
+}
+
+.aiDialogOverlay::backdrop {
+  background: transparent;
 }
 
 .aiDialog {
@@ -53,7 +67,7 @@
   width: 28px;
   height: 28px;
   place-items: center;
-  color: #77808d;
+  color: var(--color-muted);
   background: transparent;
   border-radius: 50%;
   cursor: pointer;
@@ -120,7 +134,7 @@
   place-content: center;
   justify-items: center;
   gap: 14px;
-  color: #747985;
+  color: var(--color-muted);
   text-align: center;
 }
 
@@ -157,7 +171,7 @@
 .aiDraftCard > p {
   margin-top: 6px;
   overflow: hidden;
-  color: #7a8190;
+  color: var(--color-muted);
   font-size: 0.875rem;
   line-height: 1.45;
   text-overflow: ellipsis;
@@ -180,7 +194,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 15px;
-  color: #858c99;
+  color: var(--color-muted);
   font-size: 0.75rem;
 }
 
@@ -188,7 +202,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: #858c99;
+  color: var(--color-muted);
   background: transparent;
   cursor: pointer;
   font-size: inherit;
@@ -196,7 +210,7 @@
 
 .aiDraftActions button svg {
   flex: 0 0 auto;
-  color: #8a929f;
+  color: var(--color-muted);
 }
 
 .aiDraftActions button:hover {
@@ -219,7 +233,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  color: #74767c;
+  color: var(--color-muted);
   font-size: 0.72rem;
 }
 
@@ -230,11 +244,10 @@
   padding: 9px 11px;
   color: var(--color-ink);
   background: #ffffff;
-  border: 1px solid #dfe1e5;
+  border: 1px solid var(--color-control-border);
   border-radius: 7px;
   font: inherit;
   font-size: 0.82rem;
-  outline: none;
 }
 
 .aiDraftEditor input:focus,
@@ -345,7 +358,6 @@
   font: inherit;
   font-size: 0.66rem;
   line-height: 1.45;
-  outline: 0;
 }
 
 .aiPromptForm textarea::placeholder {

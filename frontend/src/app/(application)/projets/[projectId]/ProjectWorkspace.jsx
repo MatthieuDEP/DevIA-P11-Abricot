@@ -15,10 +15,11 @@ import {
   statusClasses,
   statusLabels,
 } from "./project-utils";
-import styles from "./page.module.css";
+import styles from "./ProjectWorkspace.module.css";
 
 function TaskCard({ task, currentUser, isAdmin, projectId, expanded, onEdit, onExpand, onNotice }) {
   const [isDeleting, startTransition] = useTransition();
+  const commentsId = `task-${task.id}-comments`;
 
   function removeTask() {
     if (!window.confirm(`Supprimer la tâche « ${task.title} » ?`)) return;
@@ -72,7 +73,13 @@ function TaskCard({ task, currentUser, isAdmin, projectId, expanded, onEdit, onE
         </div>
       </dl>
       <div className={styles.commentsRow}>
-        <button className={styles.commentsToggle} onClick={onExpand} type="button">
+        <button
+          aria-controls={commentsId}
+          aria-expanded={expanded}
+          className={styles.commentsToggle}
+          onClick={onExpand}
+          type="button"
+        >
           <span>Commentaires ({task.comments?.length || 0})</span>
           {expanded ? <ChevronUp aria-hidden="true" size={17} /> : <ChevronDown aria-hidden="true" size={17} />}
         </button>
@@ -80,6 +87,7 @@ function TaskCard({ task, currentUser, isAdmin, projectId, expanded, onEdit, onE
       {expanded && (
         <TaskComments
           currentUser={currentUser}
+          id={commentsId}
           isAdmin={isAdmin}
           onNotice={onNotice}
           projectId={projectId}

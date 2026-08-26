@@ -1,0 +1,31 @@
+
+
+.loadingStack {
+  display: flex;
+  padding: 24px 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loadingStack span {
+  display: block;
+  height: 82px;
+  background: linear-gradient(90deg, #eceef1 25%, #f7f8fa 50%, #eceef1 75%);
+  background-size: 200% 100%;
+  border-radius: var(--radius-medium);
+  animation: loading 1.3s ease-in-out infinite;
+}
+
+.loadingStack span:first-child {
+  width: 55%;
+  height: 48px;
+}
+
+@keyframes loading {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingStack span { animation: none; }
+}

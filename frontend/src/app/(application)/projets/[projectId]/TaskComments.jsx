@@ -19,6 +19,7 @@ function CommentItem({ comment, currentUser, isAdmin, projectId, taskId, onNotic
     initialState
   );
   const [isDeleting, startTransition] = useTransition();
+  const errorId = `comment-${comment.id}-error`;
   const isAuthor = comment.author?.id === currentUser.id;
 
   useEffect(() => {
@@ -47,8 +48,16 @@ function CommentItem({ comment, currentUser, isAdmin, projectId, taskId, onNotic
         </div>
         {isEditing ? (
           <form action={formAction} className={styles.commentEditForm}>
-            <textarea defaultValue={comment.content} maxLength="2000" name="content" required rows="2" />
-            {state.status === "error" && <small className={styles.fieldError}>{state.message}</small>}
+            <textarea
+              aria-describedby={state.status === "error" ? errorId : undefined}
+              aria-invalid={state.status === "error"}
+              defaultValue={comment.content}
+              maxLength="2000"
+              name="content"
+              required
+              rows="2"
+            />
+            {state.status === "error" && <small className={styles.fieldError} id={errorId}>{state.message}</small>}
             <div>
               <button onClick={() => setEditing(false)} type="button">Annuler</button>
               <button disabled={isPending} type="submit">{isPending ? "Enregistrement…" : "Enregistrer"}</button>
@@ -74,12 +83,13 @@ function CommentItem({ comment, currentUser, isAdmin, projectId, taskId, onNotic
   );
 }
 
-export default function TaskComments({ task, projectId, currentUser, isAdmin, onNotice }) {
+export default function TaskComments({ task, projectId, currentUser, id, isAdmin, onNotice }) {
   const [state, formAction, isPending] = useActionState(
     createCommentAction.bind(null, projectId, task.id),
     initialState
   );
   const formRef = useRef(null);
+  const errorId = `task-${task.id}-new-comment-error`;
 
   useEffect(() => {
     if (state.status === "success") {
@@ -89,7 +99,7 @@ export default function TaskComments({ task, projectId, currentUser, isAdmin, on
   }, [state, onNotice]);
 
   return (
-    <div className={styles.commentsPanel}>
+    <div className={styles.commentsPanel} id={id}>
       {(task.comments || []).length > 0 ? (
         <ul className={styles.commentList}>
           {task.comments.map((comment) => (
@@ -110,9 +120,17 @@ export default function TaskComments({ task, projectId, currentUser, isAdmin, on
       <form action={formAction} className={styles.commentForm} ref={formRef}>
         <label>
           <span className={styles.visuallyHidden}>Ajouter un commentaire</span>
-          <textarea maxLength="2000" name="content" placeholder="Ajouter un commentaire…" required rows="2" />
+          <textarea
+            aria-describedby={state.status === "error" ? errorId : undefined}
+            aria-invalid={state.status === "error"}
+            maxLength="2000"
+            name="content"
+            placeholder="Ajouter un commentaire…"
+            required
+            rows="2"
+          />
         </label>
-        {state.status === "error" && <small className={styles.fieldError}>{state.fieldErrors?.content || state.message}</small>}
+        {state.status === "error" && <small className={styles.fieldError} id={errorId}>{state.fieldErrors?.content || state.message}</small>}
         <button className={styles.secondaryButton} disabled={isPending} type="submit">
           {isPending ? "Envoi…" : "Commenter"}
         </button>

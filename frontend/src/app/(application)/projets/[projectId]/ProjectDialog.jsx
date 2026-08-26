@@ -57,11 +57,11 @@ export default function ProjectDialog({ project, open, onClose, onNotice }) {
   }
 
   return (
-    <dialog className={styles.dialog} onCancel={onClose} ref={dialogRef}>
+    <dialog aria-labelledby="project-dialog-title" className={styles.dialog} onCancel={onClose} ref={dialogRef}>
       <div className={styles.dialogHeader}>
         <div>
           <p className={styles.eyebrow}>Paramètres</p>
-          <h2>Modifier le projet</h2>
+          <h2 id="project-dialog-title">Modifier le projet</h2>
         </div>
         <button aria-label="Fermer la fenêtre" className={styles.iconButton} onClick={onClose} type="button">
           <X aria-hidden="true" size={20} />
@@ -73,12 +73,29 @@ export default function ProjectDialog({ project, open, onClose, onNotice }) {
           {projectState.status === "error" && <p className={styles.errorBanner} role="alert">{projectState.message}</p>}
           <label className={styles.formField}>
             <span>Nom</span>
-            <input defaultValue={project.name} maxLength="100" name="name" required />
-            {projectState.fieldErrors?.name && <small className={styles.fieldError}>{projectState.fieldErrors.name}</small>}
+            <input
+              aria-describedby={projectState.fieldErrors?.name ? "project-edit-name-error" : undefined}
+              aria-invalid={Boolean(projectState.fieldErrors?.name)}
+              defaultValue={project.name}
+              maxLength="100"
+              name="name"
+              required
+            />
+            {projectState.fieldErrors?.name && <small className={styles.fieldError} id="project-edit-name-error">{projectState.fieldErrors.name}</small>}
           </label>
           <label className={styles.formField}>
             <span>Description</span>
-            <textarea defaultValue={project.description || ""} maxLength="500" name="description" rows="3" />
+            <textarea
+              aria-describedby={projectState.fieldErrors?.description ? "project-edit-description-error" : undefined}
+              aria-invalid={Boolean(projectState.fieldErrors?.description)}
+              defaultValue={project.description || ""}
+              maxLength="500"
+              name="description"
+              rows="3"
+            />
+            {projectState.fieldErrors?.description && (
+              <small className={styles.fieldError} id="project-edit-description-error">{projectState.fieldErrors.description}</small>
+            )}
           </label>
           <button className={styles.primaryButton} disabled={projectPending} type="submit">
             {projectPending ? "Enregistrement…" : "Enregistrer les informations"}
@@ -105,9 +122,16 @@ export default function ProjectDialog({ project, open, onClose, onNotice }) {
           <form action={memberAction} className={styles.inlineForm}>
             <label className={styles.formField}>
               <span>Ajouter par e-mail</span>
-              <input name="email" placeholder="collaborateur@example.com" required type="email" />
+              <input
+                aria-describedby={memberState.status === "error" ? "project-member-email-error" : undefined}
+                aria-invalid={memberState.status === "error"}
+                name="email"
+                placeholder="collaborateur@example.com"
+                required
+                type="email"
+              />
               {memberState.status === "error" && (
-                <small className={styles.fieldError}>{memberState.fieldErrors?.email || memberState.message}</small>
+                <small className={styles.fieldError} id="project-member-email-error">{memberState.fieldErrors?.email || memberState.message}</small>
               )}
             </label>
             <button className={styles.secondaryButton} disabled={memberPending} type="submit">

@@ -1,4 +1,4 @@
-import styles from "./layout.module.css";
+import styles from "./loading.module.css";
 
 export default function ApplicationLoading() {
   return (

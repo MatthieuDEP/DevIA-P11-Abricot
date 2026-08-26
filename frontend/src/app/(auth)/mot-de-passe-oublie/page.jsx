@@ -1,6 +1,6 @@
 import Link from "next/link";
 import AuthShell from "@/components/auth/AuthShell";
-import styles from "@/components/auth/AuthShell.module.css";
+import styles from "./page.module.css";
 
 export const metadata = {
   title: "Mot de passe oublié",

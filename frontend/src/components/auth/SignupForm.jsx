@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { signupAction } from "@/app/(auth)/actions";
-import styles from "./AuthShell.module.css";
+import styles from "./AuthForm.module.css";
 
 const initialState = {
   message: "",
