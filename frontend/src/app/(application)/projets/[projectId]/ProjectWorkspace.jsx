@@ -17,7 +17,7 @@ import {
 } from "./project-utils";
 import styles from "./ProjectWorkspace.module.css";
 
-function TaskCard({ task, currentUser, isAdmin, projectId, expanded, onEdit, onExpand, onNotice }) {
+function TaskCard({ task, canModifyTasks, currentUser, isAdmin, projectId, expanded, onEdit, onExpand, onNotice }) {
   const [isDeleting, startTransition] = useTransition();
   const commentsId = `task-${task.id}-comments`;
 
@@ -43,7 +43,7 @@ function TaskCard({ task, currentUser, isAdmin, projectId, expanded, onEdit, onE
             <MoreHorizontal aria-hidden="true" size={20} />
           </summary>
           <div>
-            {isAdmin && (
+            {canModifyTasks && (
               <button onClick={onEdit} type="button">
                 <Pencil aria-hidden="true" size={15} /> Modifier
               </button>
@@ -109,6 +109,7 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const isAdmin = project.userRole === "ADMIN";
+  const canModifyTasks = isAdmin || project.userRole === "CONTRIBUTOR";
 
   const handleNotice = useCallback((message, type = "success") => {
     setNotice({ message, type });
@@ -221,6 +222,7 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
           <div className={styles.taskList}>
             {filteredTasks.map((task) => (
               <TaskCard
+                canModifyTasks={canModifyTasks}
                 currentUser={currentUser}
                 expanded={expandedTaskId === task.id}
                 isAdmin={isAdmin}
@@ -243,7 +245,7 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
                     <button
                       key={task.id}
                       onClick={() => {
-                        if (isAdmin) {
+                        if (canModifyTasks) {
                           setSelectedTask(task);
                         } else {
                           setView("list");
@@ -270,13 +272,13 @@ export default function ProjectWorkspace({ project, tasks, currentUser }) {
           project={project}
         />
       )}
-      {projectDialogOpen && (
+      {projectDialogOpen && isAdmin && (
         <ProjectDialog key={project.updatedAt} onClose={() => setProjectDialogOpen(false)} onNotice={handleNotice} open project={project} />
       )}
       {taskDialogOpen && (
         <TaskDialog key="new-task" mode="create" onClose={() => setTaskDialogOpen(false)} onNotice={handleNotice} open project={project} />
       )}
-      {selectedTask && isAdmin && (
+      {selectedTask && canModifyTasks && (
         <TaskDialog key={selectedTask.id} mode="edit" onClose={() => setSelectedTask(null)} onNotice={handleNotice} open project={project} task={selectedTask} />
       )}
     </div>

@@ -118,7 +118,7 @@ export const canModifyTasks = async (
   userId: string,
   projectId: string
 ): Promise<boolean> => {
-  return await isProjectAdmin(userId, projectId);
+  return await hasProjectAccess(userId, projectId);
 };
 
 /**

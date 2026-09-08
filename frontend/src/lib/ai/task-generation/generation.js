@@ -1,4 +1,5 @@
 import { Mistral } from "@mistralai/mistralai";
+import { withMistralRetry } from "./provider-error";
 import { generatedTaskListSchema } from "./schema";
 
 const SYSTEM_PROMPT = `Tu aides à planifier un projet en français.
@@ -23,7 +24,7 @@ export async function requestStructuredTasks({
     timeoutMs: 45000,
   });
 
-  const response = await client.chat.parse({
+  const response = await withMistralRetry(() => client.chat.parse({
     model,
     temperature: 0.2,
     maxTokens: 2400,
@@ -42,7 +43,7 @@ export async function requestStructuredTasks({
         ].join("\n\n"),
       },
     ],
-  });
+  }));
 
   const parsed = response.choices?.[0]?.message?.parsed;
   return generatedTaskListSchema.parse(parsed);

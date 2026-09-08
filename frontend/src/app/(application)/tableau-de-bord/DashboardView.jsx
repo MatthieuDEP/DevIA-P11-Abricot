@@ -21,14 +21,32 @@ function matchesSearch(task, query) {
     .includes(query);
 }
 
+function isTaskInMonth(task, referenceDate) {
+  if (!task.dueDate) return false;
+
+  const dueDate = new Date(task.dueDate);
+
+  return (
+    !Number.isNaN(dueDate.getTime()) &&
+    dueDate.getMonth() === referenceDate.getMonth() &&
+    dueDate.getFullYear() === referenceDate.getFullYear()
+  );
+}
+
 export default function DashboardView({ displayName, tasks }) {
   const [view, setView] = useState("list");
   const [query, setQuery] = useState("");
+  const [referenceMonth] = useState(() => new Date());
   const normalizedQuery = query.trim().toLocaleLowerCase("fr");
 
   const filteredTasks = useMemo(
     () => tasks.filter((task) => matchesSearch(task, normalizedQuery)),
     [tasks, normalizedQuery]
+  );
+
+  const monthlyTasks = useMemo(
+    () => tasks.filter((task) => isTaskInMonth(task, referenceMonth)),
+    [tasks, referenceMonth]
   );
 
   return (
@@ -93,7 +111,7 @@ export default function DashboardView({ displayName, tasks }) {
       ) : (
         <div className={styles.kanban}>
           {kanbanColumns.map((column) => {
-            const columnTasks = tasks.filter((task) => task.status === column);
+            const columnTasks = monthlyTasks.filter((task) => task.status === column);
 
             return (
               <section className={styles.kanbanColumn} key={column}>

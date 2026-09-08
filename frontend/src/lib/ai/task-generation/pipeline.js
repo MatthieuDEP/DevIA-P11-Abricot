@@ -4,6 +4,7 @@ import { buildContextDocuments, projectUsers } from "./context";
 import { requestStructuredTasks } from "./generation";
 import { retrieveProjectContext } from "./retrieval";
 import { generatedTaskListSchema } from "./schema";
+import { mistralProviderFailure } from "./provider-error";
 
 export class TaskGenerationError extends Error {
   constructor(code, message, cause) {
@@ -61,35 +62,8 @@ function normalizeTasks(generated, project, existingTasks) {
 }
 
 function providerError(error) {
-  const status = error?.statusCode || error?.status || error?.response?.status;
-
-  if (status === 401 || status === 403) {
-    return new TaskGenerationError(
-      "INVALID_API_KEY",
-      "La configuration Mistral est invalide. Vérifiez la clé API.",
-      error
-    );
-  }
-  if (status === 429) {
-    return new TaskGenerationError(
-      "RATE_LIMIT",
-      "Le quota Mistral est momentanément atteint. Réessayez dans quelques instants.",
-      error
-    );
-  }
-  if (error?.name === "RequestTimeoutError" || error?.name === "AbortError") {
-    return new TaskGenerationError(
-      "TIMEOUT",
-      "La génération prend trop de temps. Réessayez avec une demande plus courte.",
-      error
-    );
-  }
-
-  return new TaskGenerationError(
-    "PROVIDER_UNAVAILABLE",
-    "Le service de génération est momentanément indisponible. Réessayez plus tard.",
-    error
-  );
+  const failure = mistralProviderFailure(error);
+  return new TaskGenerationError(failure.code, failure.message, error);
 }
 
 export async function generateProjectTasks({ project, tasks, prompt }) {
