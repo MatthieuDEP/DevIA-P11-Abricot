@@ -71,6 +71,18 @@ function monthlyLimitReached(headers) {
   });
 }
 
+function modelUnavailableForAccount(headers) {
+  return headerEntries(headers).some(([name, value]) => {
+    const normalizedName = String(name).toLocaleLowerCase("en");
+
+    return (
+      normalizedName.includes("ratelimit-limit") &&
+      !normalizedName.includes("remaining") &&
+      Number(value) <= 0
+    );
+  });
+}
+
 function retryAfterMilliseconds(headers) {
   const value = headerValue(headers, "retry-after");
   if (!value) return null;
@@ -128,6 +140,14 @@ export function mistralProviderFailure(error) {
         code: "QUOTA_EXHAUSTED",
         message:
           "Le quota mensuel Mistral est épuisé. Vérifiez les limites d’utilisation ou attendez leur renouvellement.",
+      };
+    }
+
+    if (modelUnavailableForAccount(error?.headers)) {
+      return {
+        code: "MODEL_NOT_AVAILABLE",
+        message:
+          "Le modèle Mistral configuré n’est pas disponible avec les limites actuelles de ce compte. Choisissez un autre modèle ou adaptez l’offre Mistral.",
       };
     }
 
